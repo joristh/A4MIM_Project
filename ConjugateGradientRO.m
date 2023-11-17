@@ -129,7 +129,7 @@ try
             % success: method converged to specified tolerance
             flag_ = 0;
             relres_ = norm(r)/norm(b);
-            if nargout == 1
+            if nargout <= 1
                 disp(['ConjugateGradientRO converged at iteration ', num2str(iter_), ' to a solution with relative residual ', num2str(relres_), '.'])
             end
             break
@@ -142,7 +142,7 @@ catch
     flag_ = 4;
     iter_ = 0;
     relres_ = 0;
-    if nargout == 1
+    if nargout <= 1
         disp('One of the scalar quantities calculated by the ConjugateGradientRO algorithm became too small or too large to continue computing.')
     end
 end
@@ -152,7 +152,7 @@ if flag_ < 0
     flag_ = 1;
     iter_ = maxit;
     relres_ = norm(r)/norm(b);
-    if nargout == 1
+    if nargout <= 1
         disp(['ConjugateGradientRO stopped at iteration ', num2str(maxit), ' without converging to the desired tolerance ', num2str(tol)])
         disp('because the maximum number of iterations was reached.')
         disp(['The iterate returned (number ', num2str(maxit), ') has relative residual ', num2str(relres_),'.'])
