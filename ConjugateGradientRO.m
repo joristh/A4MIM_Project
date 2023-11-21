@@ -1,4 +1,4 @@
-function [x, flag, relres, iter, resvec, xhist] = ConjugateGradientRO(A, b, tol, maxit, x0)
+function [x, flag, relres, iter, resvec, ritz] = ConjugateGradientRO(A, b, tol, maxit, x0)
 %
 %   ConjugateGradientRO tries to solve the linear system A*x = b for x iteratively with the conjugate gradients method where A is a symmetric positive definite matrix.
 %   Re-Orthogonalization of the residuals is used to simulate exact arithmetics.
@@ -33,7 +33,8 @@ function [x, flag, relres, iter, resvec, xhist] = ConjugateGradientRO(A, b, tol,
 %   relres - relative residual norm(b-A*x)/norm(b). If flag is 0, then relres <= tol
 %   iter   - iteration number iter at which x was computed
 %   resvec - vector of the residual norm at each iteration, including the first residual norm(b-A*x0)
-%   
+%   ritz   - vector of Ritz values
+%
 %   FLAG VALUES
 %   
 %   0      - Success: ConjugateGradientRO converged to the desired tolerance tol within maxit iterations.
@@ -57,9 +58,6 @@ try
     end
     if nargin < 5
         x0 = zeros(length(b), 1);
-    end
-    if nargin < 6
-        storehist = false;
     end
     
     % check if matrix is square
@@ -106,7 +104,7 @@ resvec_ = [r2];
 
 flag_ = -1;
 abstol2 = (tol*norm(b))^2;
-residuals = r;
+residuals = r/sqrt(r2);
 
 try
     for i=1:maxit
@@ -118,13 +116,13 @@ try
         % perform reorthogonalization to simulate exact arithmetic
         for count = 1:2
             for j = 1:i
-                r = r - r'*residuals(:, j)/resvec_(j) * residuals(:, j);
+                r = r - r'*residuals(:, j) * residuals(:, j);
             end
         end
-        % storing residual vector for reorthogonalization
-        residuals = [residuals, r];
         r2 = r'*r;
         resvec_(i+1) = r2;
+        % storing orthonormal basis for reorthogonalization
+        residuals = [residuals, r/sqrt(r2)];
         if r2 <= abstol2
             % success: method converged to specified tolerance
             flag_ = 0;
@@ -171,4 +169,7 @@ if nargout > 3
 end
 if nargout > 4
     resvec = sqrt(resvec_(:));
+end
+if nargout > 5
+    ritz = eig(residuals'*A*residuals);
 end

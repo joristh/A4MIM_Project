@@ -1,4 +1,4 @@
-function [x, flag, relres, iter, resvec] = ConjugateGradient(A, b, tol, maxit, x0)
+function [x, flag, relres, iter, resvec, ritz] = ConjugateGradient(A, b, tol, maxit, x0)
 %
 %   ConjugateGradient tries to solve the linear system A*x = b for x iteratively with the conjugate gradients method where A is a symmetric positive definite matrix.
 %   When the attempt is successful, Conjugate Gradient displays a message to confirm convergence.
@@ -32,7 +32,8 @@ function [x, flag, relres, iter, resvec] = ConjugateGradient(A, b, tol, maxit, x
 %   relres - relative residual norm(b-A*x)/norm(b). If flag is 0, then relres <= tol
 %   iter   - iteration number iter at which x was computed
 %   resvec - vector of the residual norm at each iteration, including the first residual norm(b-A*x0)
-%   
+%   ritz   - vector of Ritz values
+%
 %   FLAG VALUES
 %   
 %   0      - Success: ConjugateGradient converged to the desired tolerance tol within maxit iterations.
@@ -103,6 +104,13 @@ resvec_ = [r2];
 flag_ = -1;
 abstol2 = (tol*norm(b))^2;
 
+if nargout > 5
+    residuals = r/sqrt(r2);
+    store_residuals = true;
+else
+    store_residuals = false;
+end
+
 try
     for i=1:maxit
         iter_ = i;
@@ -112,6 +120,10 @@ try
         r = r - alpha * Ap;
         r2 = r'*r;
         resvec_(i+1) = r2;
+        if store_residuals
+            % storing orthonormal basis for Ritz values
+            residuals = [residuals, r/sqrt(r2)];
+        end
         if r2 <= abstol2
             % success: method converged to specified tolerance
             flag_ = 0;
@@ -158,4 +170,7 @@ if nargout > 3
 end
 if nargout > 4
     resvec = sqrt(resvec_(:));
+end
+if nargout > 5
+    ritz = eig(residuals'*A*residuals);
 end
