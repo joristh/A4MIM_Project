@@ -13,9 +13,9 @@ x1 = A1\b;
 x2 = A2\b;
 x3 = A3\b;
 
-x1norm = x1'*A1*x1;
-x2norm = x2'*A2*x2;
-x3norm = x3'*A3*x3;
+x1norm = sqrt(x1'*A1*x1);
+x2norm = sqrt(x2'*A2*x2);
+x3norm = sqrt(x3'*A3*x3);
 
 iter = 50;
 err1 = zeros(iter, 1);
@@ -32,9 +32,9 @@ for i = 1:iter
     e1 = x1 - X1;
     e2 = x2 - X2;
     e3 = x3 - X3;
-    err1(i+1) = e1'*A1*e1;
-    err2(i+1) = e2'*A2*e2;
-    err3(i+1) = e3'*A3*e3;
+    err1(i+1) = sqrt(e1'*A1*e1);
+    err2(i+1) = sqrt(e2'*A2*e2);
+    err3(i+1) = sqrt(e3'*A3*e3);
 end
 
 % error convergence comparison finite precision
@@ -60,9 +60,9 @@ for i = 1:iter
     e1 = x1 - X1;
     e2 = x2 - X2;
     e3 = x3 - X3;
-    err1(i+1) = e1'*A1*e1;
-    err2(i+1) = e2'*A2*e2;
-    err3(i+1) = e3'*A3*e3;
+    err1(i+1) = sqrt(e1'*A1*e1);
+    err2(i+1) = sqrt(e2'*A2*e2);
+    err3(i+1) = sqrt(e3'*A3*e3);
 end
 
 semilogy(0:iter, err1/x1norm, "b:", linewidth=1.5)
@@ -75,7 +75,7 @@ xlim([0, 50])
 exportgraphics(gcf,'plots/sec2_6_finite.pdf','ContentType','vector')
 
 % exact arithmetic modified problem
-spacing = 6e-14;
+spacing = 1e-13;
 tmp = diag(A1);
 A1_mod = diag([tmp; tmp+spacing; tmp+2*spacing; tmp-spacing]);
 tmp = diag(A2);
@@ -89,9 +89,9 @@ x1 = A1_mod\b_mod;
 x2 = A2_mod\b_mod;
 x3 = A3_mod\b_mod;
 
-x1norm = x1'*A1_mod*x1;
-x2norm = x2'*A2_mod*x2;
-x3norm = x3'*A3_mod*x3;
+x1norm = sqrt(x1'*A1_mod*x1);
+x2norm = sqrt(x2'*A2_mod*x2);
+x3norm = sqrt(x3'*A3_mod*x3);
 
 iter = 50;
 err1 = zeros(iter, 1);
@@ -108,9 +108,9 @@ for i = 1:iter
     e1 = x1 - X1;
     e2 = x2 - X2;
     e3 = x3 - X3;
-    err1(i+1) = e1'*A1_mod*e1;
-    err2(i+1) = e2'*A2_mod*e2;
-    err3(i+1) = e3'*A3_mod*e3;
+    err1(i+1) = sqrt(e1'*A1_mod*e1);
+    err2(i+1) = sqrt(e2'*A2_mod*e2);
+    err3(i+1) = sqrt(e3'*A3_mod*e3);
 end
 
 % error convergence comparison finite precision

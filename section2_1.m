@@ -27,9 +27,9 @@ x1 = A1\b;
 x2 = A2\b;
 x3 = A3\b;
 
-x1norm = x1'*A1*x1;
-x2norm = x2'*A2*x2;
-x3norm = x3'*A3*x3;
+x1norm = sqrt(x1'*A1*x1);
+x2norm = sqrt(x2'*A2*x2);
+x3norm = sqrt(x3'*A3*x3);
 
 iter = 50;
 err1 = zeros(iter, 1);
@@ -46,9 +46,9 @@ for i = 1:iter
     e1 = x1 - X1;
     e2 = x2 - X2;
     e3 = x3 - X3;
-    err1(i+1) = e1'*A1*e1;
-    err2(i+1) = e2'*A2*e2;
-    err3(i+1) = e3'*A3*e3;
+    err1(i+1) = sqrt(e1'*A1*e1);
+    err2(i+1) = sqrt(e2'*A2*e2);
+    err3(i+1) = sqrt(e3'*A3*e3);
 end
 
 % error convergence comparison
