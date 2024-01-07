@@ -7,9 +7,9 @@ cluster_spacing = 1e-12;
 cl_mod = (1-n/2 : n/2) * cluster_spacing;
 b = ones(N, 1)/sqrt(N);
 
-A1 = LSexampleMod(n, .1, 1e3, .6, true);
-A2 = LSexampleMod(n, .1, 1e3, .6, false);
-A3 = LSexampleMod(n, .1, 1e3, 1, false);
+A1 = LSexample(n, .1, 1e3, .6, true);
+A2 = LSexample(n, .1, 1e3, .6, false);
+A3 = LSexample(n, .1, 1e3, 1, false);
 a1 = diag(A1);
 a2 = diag(A2);
 a3 = diag(A3);
